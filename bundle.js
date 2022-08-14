@@ -37,13 +37,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-// require("./style.css");
+//import './style.css';
 var form = document.querySelector('#defineform');
 form.onsubmit = function () {
     var formData = new FormData(form);
     console.log(formData);
     var text = formData.get('defineword');
-    console.log(text);
+    var kyle = GetWords(text);
+    console.log(kyle);
     return false; // prevent reload
 };
 function fetchJSON(word) {
@@ -54,14 +55,14 @@ function fetchJSON(word) {
         localStorage.setItem('definition', JSON.stringify(data));
     });
 }
-function GetUsers() {
+function GetWords(text) {
     return __awaiter(this, void 0, void 0, function () {
         var response, result, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, fetch('https://api.dictionaryapi.dev/api/v2/entries/en/hello', {
+                    return [4 /*yield*/, fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + text, {
                             method: 'GET',
                             headers: {
                                 Accept: 'application/json'
@@ -93,6 +94,6 @@ function GetUsers() {
         });
     });
 }
-GetUsers();
+//GetWords();
 
 },{}]},{},[1]);

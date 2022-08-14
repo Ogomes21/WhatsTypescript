@@ -1,6 +1,6 @@
 // Import stylesheets
 import { GeneratePrimeOptionsArrayBuffer } from 'crypto';
-import './style.css';
+//import './style.css';
 
 
 const form: HTMLFormElement = document.querySelector('#defineform');
@@ -11,7 +11,8 @@ form.onsubmit = () => {
 
   console.log(formData);
   const text = formData.get('defineword') as string;
-  console.log(text);
+  const kyle = GetWords(text);
+  console.log(kyle);
   return false; // prevent reload
 };
 
@@ -32,10 +33,10 @@ type GetUser = {
   data:Word[];
 };
 
-  async function GetUsers() {
+  async function GetWords(text : string) {
     try {
       const response = await
-      fetch('https://api.dictionaryapi.dev/api/v2/entries/en/hello', {
+      fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + text, {
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -62,7 +63,9 @@ type GetUser = {
         }
       }
       }
-      GetUsers();
+      //GetWords();
+
+      
 
     
   
