@@ -37,24 +37,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-//import './style.css';
+// Import stylesheets
+// import './styles.css';
+var node_fetch_1 = require("node-fetch");
+var defURL = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
 var form = document.querySelector('#defineform');
+var defString = document.getElementById('definitions');
+var bigHead = document.getElementById('header');
 form.onsubmit = function () {
     var formData = new FormData(form);
-    console.log(formData);
     var text = formData.get('defineword');
     var kyle = GetWords(text);
     console.log(kyle);
+    bigHead.innerHTML = text;
+    var counter = 1;
+    defString.innerHTML = '';
+    GetWords(text)
+        .then(function (defintions) {
+        defintions.forEach(function (d) {
+            defString.innerHTML += "<p>".concat(counter, ". ").concat(d, "</p>");
+            counter++;
+        });
+    })["catch"](function (_) {
+        defString.innerHTML += "<p class=\"lead\">".concat(text, " isn't a word dumdum.</p>");
+    });
     return false; // prevent reload
 };
-function fetchJSON(word) {
-    fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + word)
-        .then(function (response) { return response.json(); })
-        .then(function (data) {
-        console.log(data);
-        localStorage.setItem('definition', JSON.stringify(data));
-    });
-}
 function GetWords(text) {
     return __awaiter(this, void 0, void 0, function () {
         var response, result, error_1;
@@ -62,7 +70,7 @@ function GetWords(text) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + text, {
+                    return [4 /*yield*/, (0, node_fetch_1["default"])(defURL + text, {
                             method: 'GET',
                             headers: {
                                 Accept: 'application/json'
@@ -71,21 +79,21 @@ function GetWords(text) {
                 case 1:
                     response = _a.sent();
                     if (!response.ok) {
-                        throw new Error("Error! status:\n          ".concat(response.status));
+                        throw new Error("Error! status: ".concat(response.status));
                     }
                     return [4 /*yield*/, response.json()];
                 case 2:
                     result = (_a.sent());
-                    console.log('result is:', JSON.stringify(result, null, 4));
-                    return [2 /*return*/, result];
+                    console.log('result is: ', JSON.stringify(result, null, 4));
+                    return [2 /*return*/, result[0].meanings.flatMap(function (m) { return m.definitions; }).flatMap(function (d) { return d.definition; })];
                 case 3:
                     error_1 = _a.sent();
                     if (error_1 instanceof Error) {
-                        console.log('error message:', error_1.message);
+                        console.log('error message: ', error_1.message);
                         return [2 /*return*/, error_1.message];
                     }
                     else {
-                        console.log('unexpected error:', error_1);
+                        console.log('unexpected error: ', error_1);
                         return [2 /*return*/, 'An unexpected error occurred'];
                     }
                     return [3 /*break*/, 4];
@@ -94,6 +102,33 @@ function GetWords(text) {
         });
     });
 }
-//GetWords();
 
+},{"node-fetch":2}],2:[function(require,module,exports){
+(function (global){(function (){
+"use strict";
+
+// ref: https://github.com/tc39/proposal-global
+var getGlobal = function () {
+	// the only reliable means to get the global object is
+	// `Function('return this')()`
+	// However, this causes CSP violations in Chrome apps.
+	if (typeof self !== 'undefined') { return self; }
+	if (typeof window !== 'undefined') { return window; }
+	if (typeof global !== 'undefined') { return global; }
+	throw new Error('unable to locate global object');
+}
+
+var global = getGlobal();
+
+module.exports = exports = global.fetch;
+
+// Needed for TypeScript and Webpack.
+if (global.fetch) {
+	exports.default = global.fetch.bind(global);
+}
+
+exports.Headers = global.Headers;
+exports.Request = global.Request;
+exports.Response = global.Response;
+}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}]},{},[1]);
